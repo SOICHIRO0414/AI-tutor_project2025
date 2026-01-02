@@ -4,16 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIチューター</title>
+    <title>AIチューター (デモ版)</title>
 
-    <!-- PWA設定 -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="授業AI">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3426/3426653.png">
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -312,25 +310,12 @@
             margin: 0 2px;
         }
 
-        .typing-indicator span:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: -0.16s;
-        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
 
         @keyframes typing {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
-            }
-
-            40% {
-                transform: scale(1);
-            }
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
         }
 
         /* --- 振り返り画面 --- */
@@ -356,9 +341,7 @@
             transition: background 0.2s;
         }
 
-        .toggle-item:hover {
-            background: #f0f0f0;
-        }
+        .toggle-item:hover { background: #f0f0f0; }
 
         .status-badge {
             padding: 6px 12px;
@@ -370,17 +353,8 @@
             transition: all 0.2s;
         }
 
-        .status-unsolved {
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-        }
-
-        .status-solved {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
+        .status-unsolved { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+        .status-solved { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
 
         .submit-btn {
             width: 100%;
@@ -397,14 +371,8 @@
             transition: transform 0.1s;
         }
 
-        .submit-btn:active {
-            transform: translateY(2px);
-        }
-
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+        .submit-btn:active { transform: translateY(2px); }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
 
         /* --- 共有疑問リスト --- */
         .shared-question-list {
@@ -432,28 +400,15 @@
         }
 
         /* 画面表示制御 */
-        .view {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .view.active {
-            display: block;
-        }
+        .view { display: none; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- ログイン画面 --- */
+        /* --- ログイン画面 (デモでは非表示) --- */
         .login-container {
             max-width: 400px;
             margin: 100px auto;
@@ -463,78 +418,9 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .login-title {
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 25px;
-            color: var(--primary-color);
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        .login-btn:hover {
-            background: #3a7bc8;
-        }
-
-        .login-btn.secondary {
-            background: #fff;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-        }
-
-        .login-btn.secondary:hover {
-            background: #eaf4ff;
-        }
-
-        .login-error {
-            color: #c62828;
-            font-size: 0.9em;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .login-tabs {
-            display: flex;
-            margin-bottom: 20px;
-        }
-
-        .login-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            border-bottom: 2px solid #eee;
-            color: #888;
-        }
-
-        .login-tab.active {
-            border-bottom-color: var(--primary-color);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        /* カスタムカレンダー */
-        .calendar-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .calendar-input {
-            cursor: pointer;
-            background: #fff;
-        }
-
+        /* カレンダー */
+        .calendar-wrapper { position: relative; display: inline-block; }
+        .calendar-input { cursor: pointer; background: #fff; }
         .calendar-dropdown {
             display: none;
             position: absolute;
@@ -548,88 +434,17 @@
             padding: 10px;
             min-width: 280px;
         }
+        .calendar-dropdown.show { display: block; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .calendar-header button { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 5px 10px; color: var(--primary-color); }
+        .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8em; color: #666; }
+        .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .calendar-day { text-align: center; padding: 8px 4px; cursor: pointer; border-radius: 4px; font-size: 0.9em; }
+        .calendar-day.other-month { color: #ccc; }
+        .calendar-day.today { background: #e3f2fd; font-weight: bold; }
+        .calendar-day.selected { background: var(--primary-color); color: #fff; }
 
-        .calendar-dropdown.show {
-            display: block;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .calendar-header button {
-            background: none;
-            border: none;
-            font-size: 1.2em;
-            cursor: pointer;
-            padding: 5px 10px;
-            color: var(--primary-color);
-        }
-
-        .calendar-header button:hover {
-            background: #eaf4ff;
-            border-radius: 4px;
-        }
-
-        .calendar-header span {
-            font-weight: bold;
-            font-size: 1em;
-        }
-
-        .calendar-weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.8em;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .calendar-weekdays span:first-child {
-            color: var(--primary-color);
-        }
-
-        .calendar-weekdays span:last-child {
-            color: #c62828;
-        }
-
-        .calendar-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-        }
-
-        .calendar-day {
-            text-align: center;
-            padding: 8px 4px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .calendar-day:hover {
-            background: #eaf4ff;
-        }
-
-        .calendar-day.other-month {
-            color: #ccc;
-        }
-
-        .calendar-day.today {
-            background: #e3f2fd;
-            font-weight: bold;
-        }
-
-        .calendar-day.selected {
-            background: var(--primary-color);
-            color: #fff;
-        }
-
-        /* ユーザー情報表示 */
+        /* ユーザー情報 */
         .user-info {
             display: flex;
             align-items: center;
@@ -639,75 +454,19 @@
             border-radius: 6px;
             margin-bottom: 15px;
         }
-
-        .user-name {
-            font-weight: bold;
-            color: #1565c0;
-        }
-
-        .streak-badge {
-            background: #ff9800;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8em;
-        }
-
-        .logout-btn {
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            font-size: 0.85em;
-            text-decoration: underline;
-        }
+        .user-name { font-weight: bold; color: #1565c0; }
+        .streak-badge { background: #ff9800; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8em; }
     </style>
 </head>
 
 <body>
 
-    <!-- ログイン画面 -->
-    <div id="login-view" class="login-container">
-        <h1 class="login-title">AIチューター</h1>
-
-        <div class="login-tabs">
-            <div class="login-tab active" onclick="switchLoginTab('login')">ログイン</div>
-            <div class="login-tab" onclick="switchLoginTab('register')">新規登録</div>
-        </div>
-
-        <!-- ログインフォーム -->
-        <div id="login-form">
-            <label>学籍番号</label>
-            <input type="text" id="login-student-code" placeholder="例: ST001">
-
-            <label>パスワード</label>
-            <input type="password" id="login-password" placeholder="パスワード">
-
-            <div id="login-error" class="login-error" style="display:none;"></div>
-
-            <button class="login-btn" onclick="handleLogin()">ログイン</button>
-        </div>
-
-        <!-- 登録フォーム -->
-        <div id="register-form" style="display:none;">
-            <label>学籍番号</label>
-            <input type="text" id="register-student-code" placeholder="例: ST001">
-
-            <label>ニックネーム</label>
-            <input type="text" id="register-display-name" placeholder="表示名">
-
-            <label>パスワード</label>
-            <input type="password" id="register-password" placeholder="4文字以上">
-
-            <div id="register-error" class="login-error" style="display:none;"></div>
-
-            <button class="login-btn" onclick="handleRegister()">登録してはじめる</button>
-        </div>
+    <div id="login-view" class="login-container" style="display:none;">
+        <h1 class="text-2xl font-bold text-center mb-6 text-blue-600">AIチューター</h1>
+        <p class="text-center text-gray-600">デモ版のためログインは不要です</p>
     </div>
 
-    <!-- メインアプリ（ログイン後表示） -->
-    <div id="app-container" style="display:none;">
-        <!-- ナビゲーション -->
+    <div id="app-container">
         <nav class="tab-bar">
             <div class="tab-btn active" onclick="switchTab('home')">ホーム</div>
             <div class="tab-btn" onclick="switchTab('chat')">質問チャット</div>
@@ -715,14 +474,13 @@
         </nav>
 
         <main class="container">
-            <!-- === ホーム画面 === -->
             <section id="home-view" class="view active">
                 <div class="user-info">
                     <div>
-                        <span class="user-name" id="display-user-name">ゲスト</span>
-                        <span class="streak-badge" id="streak-display">0日連続</span>
+                        <span class="user-name" id="display-user-name">テストユーザー</span>
+                        <span class="streak-badge" id="streak-display">5日連続</span>
                     </div>
-                    <button class="logout-btn" onclick="handleLogout()">ログアウト</button>
+                    <span class="text-xs text-gray-500">Demo Mode</span>
                 </div>
 
                 <div class="section">
@@ -751,56 +509,53 @@
 
                     <label>教科を選択</label>
                     <div class="subject-tabs" id="subject-tabs-container">
-                        <!-- 教科は動的に読み込み -->
-                    </div>
-                    <input type="hidden" id="home-subject" value="">
-                    <input type="hidden" id="home-subject-id" value="">
+                        </div>
+                    <input type="hidden" id="home-subject" value="英語">
+                    <input type="hidden" id="home-subject-id" value="3">
 
                     <label>単元</label>
                     <input type="text" placeholder="例: 過去形" id="home-unit">
 
                     <div class="action-buttons">
-                        <div class="big-btn" onclick="startSession('chat')">
+                        <div class="big-btn" onclick="switchTab('chat')">
                             質問チャット<br>を開く
                         </div>
-                        <div class="big-btn" onclick="startSession('review')">
+                        <div class="big-btn" onclick="switchTab('review')">
                             授業の振り返り<br>を書く
                         </div>
                     </div>
                 </div>
 
                 <div class="section">
-                    <h3>皆の疑問 (リアルタイム共有)</h3>
-                    <p style="font-size:0.8em; color:#666; margin-bottom: 10px;">
-                        ※チャットでの質問から、重要な疑問が自動的にここに共有されます。
-                    </p>
+                    <h3>皆の疑問 (デモ)</h3>
                     <ul id="shared-questions-list" class="shared-question-list">
-                        <li class="empty-message">読み込み中...</li>
+                        <li>過去形と現在完了形の見分け方は？ <small style="color:#888;">(英語)</small></li>
+                        <li>ルートの計算がわかりません <small style="color:#888;">(数学)</small></li>
                     </ul>
                 </div>
 
                 <div class="section">
-                    <h3>過去の授業</h3>
+                    <h3>過去の授業 (デモ履歴)</h3>
                     <div id="history-list-container" class="history-list-container">
-                        <div style="text-align:center; padding:20px; color:#999; font-size:0.9em;">
-                            読み込み中...
+                        <div class="history-item">
+                            <span class="history-subject">数学</span>
+                            <div class="history-content">
+                                <span class="history-date">2026/01/01</span>
+                                <span>方程式の応用</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- === 質問チャット画面 === -->
             <section id="chat-view" class="view">
                 <div class="section">
-                    <h3>質問チャット <span id="chat-header-info"
-                            style="font-size:0.8em; font-weight:normal; margin-left:10px;">(未選択)</span></h3>
-
+                    <h3>質問チャット <span id="chat-header-info" style="font-size:0.8em; font-weight:normal; margin-left:10px;">(英語)</span></h3>
                     <div class="chat-container" id="chat-container">
                         <div class="message ai">
                             <div class="bubble">こんにちは！今日の授業でわからないことはありますか？</div>
                         </div>
                     </div>
-
                     <div style="display:flex; gap:10px; margin-top:10px;">
                         <input type="text" id="chat-input" placeholder="質問を入力..." onkeypress="handleKeyPress(event)">
                         <button id="send-btn" onclick="sendMessage()"
@@ -809,13 +564,12 @@
                 </div>
             </section>
 
-            <!-- === 振り返り画面 === -->
             <section id="review-view" class="view">
                 <div class="section">
                     <h3>授業の振り返り</h3>
                     <div class="class-meta-box">
                         <strong>日程:</strong> <span id="review-date"></span><br>
-                        <strong>教科:</strong> <span id="review-subject">未選択</span><br>
+                        <strong>教科:</strong> <span id="review-subject">英語</span><br>
                         <strong>テーマ:</strong> <span id="review-unit">未入力</span>
                     </div>
 
@@ -828,767 +582,132 @@
                     <label>授業でわからなかったこと・疑問</label>
                     <textarea id="review-question" placeholder="例: 不規則動詞はどうやって覚える？"></textarea>
                 </div>
-
-                <div class="section">
-                    <h3>授業中にメモした疑問</h3>
-                    <p style="font-size:0.8em; color:#666; margin-bottom: 10px;">
-                        ※チャットでの質問が自動でここに追加されます。<br>
-                        ※タップで「解決済み」に変更できます
-                    </p>
-
-                    <div id="personal-questions-list">
-                        <div class="empty-message"
-                            style="text-align:left; background:transparent!important; border:none!important; padding:0;">
-                            まだメモはありません。チャットで質問すると自動で追加されます。
-                        </div>
-                    </div>
-                </div>
-
-                <button class="submit-btn" onclick="submitReview()">振り返りを提出する</button>
+                <button class="submit-btn" onclick="alert('デモ版のため提出はされません')">振り返りを提出する</button>
             </section>
         </main>
     </div>
 
     <script>
-        // =======================================================
-        // グローバル状態
-        // =======================================================
-        const API_BASE = './api';
-        let currentUser = null;
-        let currentSession = null;
-        let subjects = [];
-        let pollInterval = null;
-
-        // カレンダー用
+        // --- デモ用グローバル状態 ---
+        let currentUser = { display_name: "テストユーザー", current_streak: 5 };
+        let subjects = [
+            {subject_id: 1, subject_name: "国語"},
+            {subject_id: 2, subject_name: "数学"},
+            {subject_id: 3, subject_name: "英語"},
+            {subject_id: 4, subject_name: "理科"},
+            {subject_id: 5, subject_name: "社会"}
+        ];
         let calendarDate = new Date();
         let selectedDate = new Date();
 
-        // =======================================================
-        // 初期化
-        // =======================================================
-        document.addEventListener('DOMContentLoaded', async function () {
-            // カレンダー初期化
+        document.addEventListener('DOMContentLoaded', function () {
             initCalendar();
-
-            // セッション確認
-            await checkAuth();
+            renderSubjectTabs();
+            updateDateDisplay();
+            // 最初から英語を選択状態にする
+            const engBtn = document.querySelector('.subject-tab-btn:nth-child(3)');
+            if(engBtn) selectSubject(engBtn, '英語', 3);
         });
-
-        // =======================================================
-        // 認証関連
-        // =======================================================
-        async function checkAuth() {
-    // サーバーへの問い合わせ（fetch）を全部飛ばして、強制的にログイン状態にします
-    currentUser = { name: "Test User" }; // ダミーのユーザー情報を入れる（エラー回避のため）
-    showApp(); // メイン画面を表示
-}
-        function showLogin() {
-    // ログイン画面を出さずに、強制的にメイン画面(showApp)を呼ぶように変更
-    showApp(); 
-}
-
-            // ユーザー情報表示
-            document.getElementById('display-user-name').textContent = currentUser.display_name;
-            document.getElementById('streak-display').textContent = `${currentUser.current_streak}日連続`;
-
-            // データ読み込み
-            loadSubjects();
-            loadSharedQuestions();
-            loadHistory();
-
-            // 定期更新開始
-            startPolling();
-        }
-
-        function switchLoginTab(tab) {
-            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.login-tab:${tab === 'login' ? 'first' : 'last'}-child`).classList.add('active');
-
-            document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
-            document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
-
-            // エラー非表示
-            document.getElementById('login-error').style.display = 'none';
-            document.getElementById('register-error').style.display = 'none';
-        }
-
-        async function handleLogin() {
-            const studentCode = document.getElementById('login-student-code').value.trim();
-            const password = document.getElementById('login-password').value;
-            const errorEl = document.getElementById('login-error');
-
-            if (!studentCode || !password) {
-                errorEl.textContent = '学籍番号とパスワードを入力してください';
-                errorEl.style.display = 'block';
-                return;
-            }
-
-            try {
-                const res = await fetch(`${API_BASE}/auth.php?action=login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ student_code: studentCode, password })
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    currentUser = data.user;
-                    showApp();
-                } else {
-                    errorEl.textContent = data.error || 'ログインに失敗しました';
-                    errorEl.style.display = 'block';
-                }
-            } catch (e) {
-                errorEl.textContent = '通信エラーが発生しました';
-                errorEl.style.display = 'block';
-            }
-        }
-
-        async function handleRegister() {
-            const studentCode = document.getElementById('register-student-code').value.trim();
-            const displayName = document.getElementById('register-display-name').value.trim();
-            const password = document.getElementById('register-password').value;
-            const errorEl = document.getElementById('register-error');
-
-            if (!studentCode || !displayName || !password) {
-                errorEl.textContent = 'すべての項目を入力してください';
-                errorEl.style.display = 'block';
-                return;
-            }
-
-            try {
-                const res = await fetch(`${API_BASE}/auth.php?action=register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ student_code: studentCode, display_name: displayName, password })
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    currentUser = data.user;
-                    showApp();
-                } else {
-                    errorEl.textContent = data.error || '登録に失敗しました';
-                    errorEl.style.display = 'block';
-                }
-            } catch (e) {
-                errorEl.textContent = '通信エラーが発生しました';
-                errorEl.style.display = 'block';
-            }
-        }
-
-        async function handleLogout() {
-            try {
-                await fetch(`${API_BASE}/auth.php?action=logout`, {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-            } catch (e) { }
-
-            currentUser = null;
-            currentSession = null;
-            stopPolling();
-            showLogin();
-        }
-
-        // =======================================================
-        // データ読み込み
-        // =======================================================
-        async function loadSubjects() {
-            try {
-                const res = await fetch(`${API_BASE}/auth.php?action=subjects`);
-                const data = await res.json();
-
-                if (data.success) {
-                    subjects = data.subjects;
-                    renderSubjectTabs();
-                }
-            } catch (e) {
-                console.error('Failed to load subjects:', e);
-            }
-        }
 
         function renderSubjectTabs() {
             const container = document.getElementById('subject-tabs-container');
             container.innerHTML = subjects.map(s =>
-                `<div class="subject-tab-btn" onclick="selectSubject(this, '${s.subject_name}', ${s.subject_id})">${s.subject_name}</div>`
+                `<div class="subject-tab-btn ${s.subject_name === '英語' ? 'active' : ''}" onclick="selectSubject(this, '${s.subject_name}', ${s.subject_id})">${s.subject_name}</div>`
             ).join('');
         }
 
-        async function loadSharedQuestions() {
-            try {
-                const today = document.getElementById('today-date').value;
-                const res = await fetch(`${API_BASE}/questions.php?date=${today}&limit=20`);
-                const data = await res.json();
+        function selectSubject(element, subjectName, subjectId) {
+            document.querySelectorAll('.subject-tab-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('home-subject').value = subjectName;
+            document.getElementById('home-subject-id').value = subjectId;
+            document.getElementById('chat-header-info').textContent = `(${subjectName})`;
+            document.getElementById('review-subject').textContent = subjectName;
+        }
 
-                const listEl = document.getElementById('shared-questions-list');
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
 
-                if (data.success && data.questions.length > 0) {
-                    listEl.innerHTML = data.questions.map(q =>
-                        `<li>${escapeHtml(q.content)} <small style="color:#888;">(${q.subject_name})</small></li>`
-                    ).join('');
-                } else {
-                    listEl.innerHTML = '<li class="empty-message">まだ疑問はありません。チャットで質問すると自動で追加されます。</li>';
-                }
-            } catch (e) {
-                console.error('Failed to load questions:', e);
+            const tabs = document.querySelectorAll('.tab-btn');
+            if (tabName === 'home') {
+                tabs[0].classList.add('active');
+                document.getElementById('home-view').classList.add('active');
+            } else if (tabName === 'chat') {
+                tabs[1].classList.add('active');
+                document.getElementById('chat-view').classList.add('active');
+            } else if (tabName === 'review') {
+                tabs[2].classList.add('active');
+                document.getElementById('review-view').classList.add('active');
             }
-        }
-
-        async function loadHistory() {
-            try {
-                const res = await fetch(`${API_BASE}/sessions.php?limit=10`, {
-                    credentials: 'include'
-                });
-                const data = await res.json();
-
-                const container = document.getElementById('history-list-container');
-
-                if (data.success && data.sessions.length > 0) {
-                    container.innerHTML = data.sessions.map(s => `
-                <div class="history-item" onclick="loadSession(${s.session_id})">
-                    <span class="history-subject">${s.subject_name}</span>
-                    <div class="history-content">
-                        <span class="history-date">${s.study_date}</span>
-                        <span>${s.unit_name || '単元なし'}</span>
-                    </div>
-                </div>
-            `).join('');
-                } else {
-                    container.innerHTML = '<div style="text-align:center; padding:20px; color:#999; font-size:0.9em;">まだ履歴はありません。</div>';
-                }
-            } catch (e) {
-                console.error('Failed to load history:', e);
-            }
-        }
-
-        async function loadNotes() {
-            if (!currentSession) return;
-
-            try {
-                const res = await fetch(`${API_BASE}/notes.php?session_id=${currentSession.session_id}`, {
-                    credentials: 'include'
-                });
-                const data = await res.json();
-
-                const container = document.getElementById('personal-questions-list');
-
-                if (data.success && data.notes.length > 0) {
-                    container.innerHTML = data.notes.map(n => `
-                <div class="toggle-item" onclick="toggleNoteStatus(${n.note_id}, '${n.status}')">
-                    <span>${escapeHtml(n.content)}</span>
-                    <span class="status-badge ${n.status === 'solved' ? 'status-solved' : 'status-unsolved'}">
-                        ${n.status === 'solved' ? '解決' : 'まだ'}
-                    </span>
-                </div>
-            `).join('');
-                } else {
-                    container.innerHTML = '<div class="empty-message" style="text-align:left; background:transparent!important; border:none!important; padding:0;">まだメモはありません。チャットで質問すると自動で追加されます。</div>';
-                }
-            } catch (e) {
-                console.error('Failed to load notes:', e);
-            }
-        }
-
-        // =======================================================
-        // セッション管理
-        // =======================================================
-        async function startSession(targetTab) {
-            const subjectId = document.getElementById('home-subject-id').value;
-            const subjectName = document.getElementById('home-subject').value;
-            const studyDate = document.getElementById('today-date').value;
-            const period = document.getElementById('class-period').value;
-            const unitName = document.getElementById('home-unit').value;
-
-            if (!subjectId) {
-                alert('教科を選択してください');
-                return;
-            }
-
-            try {
-                const res = await fetch(`${API_BASE}/sessions.php?action=current&subject_id=${subjectId}&study_date=${studyDate}&period=${period}&unit_name=${encodeURIComponent(unitName)}`, {
-                    credentials: 'include'
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    currentSession = data.session;
-                    updateSessionDisplay();
-
-                    if (data.created) {
-                        // 新規セッション：チャット履歴クリア
-                        resetChat();
-                    } else {
-                        // 既存セッション：チャット履歴読み込み
-                        await loadChatHistory();
-                    }
-
-                    await loadNotes();
-                    switchTab(targetTab);
-                } else {
-                    alert(data.error || 'セッションの作成に失敗しました');
-                }
-            } catch (e) {
-                console.error('Failed to start session:', e);
-                alert('通信エラーが発生しました');
-            }
-        }
-
-        async function loadSession(sessionId) {
-            try {
-                const res = await fetch(`${API_BASE}/sessions.php?id=${sessionId}`, {
-                    credentials: 'include'
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    currentSession = data.session;
-
-                    // フォームに反映
-                    document.getElementById('today-date').value = currentSession.study_date;
-                    document.getElementById('class-period').value = currentSession.period;
-                    document.getElementById('home-unit').value = currentSession.unit_name || '';
-
-                    // 教科タブを選択
-                    const subjectBtn = Array.from(document.querySelectorAll('.subject-tab-btn'))
-                        .find(btn => btn.textContent === currentSession.subject_name);
-                    if (subjectBtn) {
-                        selectSubject(subjectBtn, currentSession.subject_name, currentSession.subject_id);
-                    }
-
-                    updateSessionDisplay();
-                    await loadChatHistory();
-                    await loadNotes();
-                    switchTab('chat');
-                }
-            } catch (e) {
-                console.error('Failed to load session:', e);
-            }
-        }
-
-        function updateSessionDisplay() {
-            if (!currentSession) return;
-
-            const displayUnit = currentSession.unit_name ? ` / ${currentSession.unit_name}` : '';
-            document.getElementById('chat-header-info').textContent = `(${currentSession.subject_name}${displayUnit})`;
-            document.getElementById('review-date').textContent = currentSession.study_date.replace(/-/g, '/');
-            document.getElementById('review-subject').textContent = currentSession.subject_name;
-            document.getElementById('review-unit').textContent = currentSession.unit_name || '未入力';
-        }
-
-        // =======================================================
-        // チャット機能
-        // =======================================================
-        function resetChat() {
-            const container = document.getElementById('chat-container');
-            container.innerHTML = `
-        <div class="message ai">
-            <div class="bubble">こんにちは！今日の授業でわからないことはありますか？</div>
-        </div>
-    `;
-        }
-
-        async function loadChatHistory() {
-            if (!currentSession) return;
-
-            try {
-                const res = await fetch(`${API_BASE}/chat.php?session_id=${currentSession.session_id}`, {
-                    credentials: 'include'
-                });
-                const data = await res.json();
-
-                if (data.success && data.messages.length > 0) {
-                    const container = document.getElementById('chat-container');
-                    container.innerHTML = `
-                <div class="message ai">
-                    <div class="bubble">こんにちは！今日の授業でわからないことはありますか？</div>
-                </div>
-            `;
-
-                    data.messages.forEach(msg => {
-                        addMessage(msg.sender === 'user' ? 'student' : 'ai', msg.content);
-                    });
-                } else {
-                    resetChat();
-                }
-            } catch (e) {
-                console.error('Failed to load chat history:', e);
-                resetChat();
-            }
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') sendMessage();
+            window.scrollTo(0, 0);
         }
 
         async function sendMessage() {
-            if (!currentSession) {
-                alert('先に教科を選択してセッションを開始してください');
-                return;
-            }
-
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
             if (!text) return;
 
-            const container = document.getElementById('chat-container');
-            const sendBtn = document.getElementById('send-btn');
-
             addMessage('student', text);
             input.value = '';
 
-            // Loading表示
-            const loadingId = 'loading-' + Date.now();
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'message ai';
-            loadingDiv.id = loadingId;
-            loadingDiv.innerHTML = `<div class="bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
-            container.appendChild(loadingDiv);
-            container.scrollTop = container.scrollHeight;
-
-            input.disabled = true;
-            sendBtn.disabled = true;
-
-            try {
-                const res = await fetch(`${API_BASE}/chat.php`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        session_id: currentSession.session_id,
-                        message: text
-                    })
-                });
-
-                const data = await res.json();
-
-                const loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.remove();
-
-                if (data.success) {
-                    addMessage('ai', data.answer);
-
-                    // 疑問が共有された場合
-                    if (data.summary) {
-                        loadSharedQuestions();
-                        loadNotes();
-                    }
-                } else {
-                    addMessage('ai', `エラー: ${data.error || '応答を取得できませんでした'}`);
-                }
-            } catch (e) {
-                const loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.remove();
-                addMessage('ai', '通信エラーが発生しました。しばらく待ってから再度お試しください。');
-            } finally {
-                input.disabled = false;
-                sendBtn.disabled = false;
-                input.focus();
-            }
+            // AIのダミー回答
+            setTimeout(() => {
+                addMessage('ai', "それは良い質問ですね！デモ版なので具体的な回答はできませんが、実際のアプリではAIがヒントを出してくれます。");
+            }, 1000);
         }
 
         function addMessage(type, text) {
             const container = document.getElementById('chat-container');
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${type}`;
-            msgDiv.innerHTML = `<div class="bubble">${escapeHtml(text)}</div>`;
+            msgDiv.innerHTML = `<div class="bubble">${text}</div>`;
             container.appendChild(msgDiv);
             container.scrollTop = container.scrollHeight;
         }
 
-        // =======================================================
-        // メモ機能
-        // =======================================================
-        async function toggleNoteStatus(noteId, currentStatus) {
-            const newStatus = currentStatus === 'unsolved' ? 'solved' : 'unsolved';
+        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
 
-            try {
-                await fetch(`${API_BASE}/notes.php?id=${noteId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ status: newStatus })
-                });
-
-                loadNotes();
-            } catch (e) {
-                console.error('Failed to toggle note:', e);
-            }
-        }
-
-        // =======================================================
-        // 振り返り機能
-        // =======================================================
-        async function submitReview() {
-            if (!currentSession) {
-                alert('先に教科を選択してセッションを開始してください');
-                return;
-            }
-
-            const goalText = document.getElementById('review-goal').value.trim();
-            const understoodText = document.getElementById('review-learned').value.trim();
-            const questionText = document.getElementById('review-question').value.trim();
-
-            // バリデーション：すべてのフィールドに入力が必要
-            if (!goalText || !understoodText || !questionText) {
-                alert('すべての項目を入力してください');
-                return;
-            }
-
-            const submitBtn = document.querySelector('.submit-btn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = '送信中...';
-
-            try {
-                const res = await fetch(`${API_BASE}/reflections.php`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        session_id: currentSession.session_id,
-                        goal_text: goalText,
-                        understood_text: understoodText,
-                        question_text: questionText
-                    })
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    alert('振り返りを提出しました！');
-                    document.getElementById('review-goal').value = '';
-                    document.getElementById('review-learned').value = '';
-                    document.getElementById('review-question').value = '';
-                    loadHistory();
-                    switchTab('home');
-                } else {
-                    alert(data.error || '提出に失敗しました');
-                }
-            } catch (e) {
-                alert('通信エラーが発生しました');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = '振り返りを提出する';
-            }
-        }
-
-        // =======================================================
-        // UI操作
-        // =======================================================
-        function selectSubject(element, subjectName, subjectId) {
-            document.querySelectorAll('.subject-tab-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('home-subject').value = subjectName;
-            document.getElementById('home-subject-id').value = subjectId;
-
-            const unit = document.getElementById('home-unit').value || '';
-            const displayUnit = unit ? ` / ${unit}` : '';
-            document.getElementById('chat-header-info').textContent = `(${subjectName}${displayUnit})`;
-            document.getElementById('review-subject').textContent = subjectName;
-        }
-
-        function validatePeriod(input) {
-            let value = parseInt(input.value);
-            if (isNaN(value) || value < 1) input.value = 1;
-            else if (value > 12) input.value = 12;
-        }
-
-        function switchTab(tabName) {
-            // チャットや振り返りタブに移動しようとした場合、セッションがなければ作成を試みる
-            if ((tabName === 'chat' || tabName === 'review') && !currentSession) {
-                const subjectId = document.getElementById('home-subject-id').value;
-                if (!subjectId) {
-                    alert('先に教科を選択してください');
-                    return;
-                }
-                // セッションを作成してから移動
-                startSession(tabName);
-                return;
-            }
-
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-
-            if (tabName === 'home') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('home-view').classList.add('active');
-            } else if (tabName === 'chat') {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('chat-view').classList.add('active');
-                const container = document.getElementById('chat-container');
-                container.scrollTop = container.scrollHeight;
-            } else if (tabName === 'review') {
-                document.querySelectorAll('.tab-btn')[2].classList.add('active');
-                document.getElementById('review-view').classList.add('active');
-            }
-            window.scrollTo(0, 0);
-        }
-
-        // 単元入力時の表示更新
-        document.getElementById('home-unit').addEventListener('input', function (e) {
-            const subject = document.getElementById('home-subject').value || '未選択';
-            const unit = e.target.value;
-            const displayUnit = unit ? ` / ${unit}` : '';
-            document.getElementById('chat-header-info').textContent = `(${subject}${displayUnit})`;
-            document.getElementById('review-unit').textContent = unit || '未入力';
-        });
-
-        // =======================================================
-        // ポーリング（定期更新）
-        // =======================================================
-        function startPolling() {
-            pollInterval = setInterval(() => {
-                loadSharedQuestions();
-            }, 30000); // 30秒ごと
-        }
-
-        function stopPolling() {
-            if (pollInterval) {
-                clearInterval(pollInterval);
-                pollInterval = null;
-            }
-        }
-
-        // =======================================================
-        // カレンダー機能
-        // =======================================================
+        // --- カレンダー・UI関連 ---
         function initCalendar() {
             const today = new Date();
             selectedDate = today;
             calendarDate = new Date(today.getFullYear(), today.getMonth(), 1);
-
-            updateDateDisplay();
-            renderCalendar();
-
-            // カレンダー入力欄クリックでドロップダウン表示
             const input = document.getElementById('today-date');
             const dropdown = document.getElementById('calendar-dropdown');
-
-            input.addEventListener('click', function (e) {
-                e.stopPropagation();
-                dropdown.classList.toggle('show');
-                if (dropdown.classList.contains('show')) {
-                    renderCalendar();
-                }
-            });
-
-            // 外側クリックで閉じる
-            document.addEventListener('click', function (e) {
-                if (!dropdown.contains(e.target) && e.target !== input) {
-                    dropdown.classList.remove('show');
-                }
-            });
-        }
-
-        function formatDateValue(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function formatDateDisplay(date) {
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            return `${year}/${month}/${day}`;
-        }
-
-        function updateDateDisplay() {
-            const input = document.getElementById('today-date');
-            input.value = formatDateValue(selectedDate);
-            document.getElementById('review-date').innerText = formatDateDisplay(selectedDate);
+            input.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); renderCalendar(); });
+            document.addEventListener('click', (e) => { if (!dropdown.contains(e.target) && e.target !== input) dropdown.classList.remove('show'); });
         }
 
         function renderCalendar() {
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
-
-            // ヘッダー更新
             document.getElementById('calendar-month-year').textContent = `${year}年${month + 1}月`;
-
-            // 月の最初の日と最後の日
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-
-            // 月曜始まりのため、曜日を調整 (0=月, 1=火, ..., 6=日)
-            let startDayOfWeek = firstDay.getDay() - 1;
-            if (startDayOfWeek < 0) startDayOfWeek = 6; // 日曜日は6
-
+            const lastDay = new Date(year, month + 1, 0).getDate();
             const daysContainer = document.getElementById('calendar-days');
             daysContainer.innerHTML = '';
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            // 前月の日を埋める
-            const prevMonth = new Date(year, month, 0);
-            for (let i = startDayOfWeek - 1; i >= 0; i--) {
-                const day = prevMonth.getDate() - i;
-                const dayEl = document.createElement('div');
-                dayEl.className = 'calendar-day other-month';
-                dayEl.textContent = day;
-                const dateValue = new Date(year, month - 1, day);
-                dayEl.onclick = () => selectDate(dateValue);
-                daysContainer.appendChild(dayEl);
-            }
-
-            // 当月の日
-            for (let day = 1; day <= lastDay.getDate(); day++) {
+            for (let d = 1; d <= lastDay; d++) {
                 const dayEl = document.createElement('div');
                 dayEl.className = 'calendar-day';
-                dayEl.textContent = day;
-
-                const dateValue = new Date(year, month, day);
-                dateValue.setHours(0, 0, 0, 0);
-
-                if (dateValue.getTime() === today.getTime()) {
-                    dayEl.classList.add('today');
-                }
-                if (formatDateValue(dateValue) === formatDateValue(selectedDate)) {
-                    dayEl.classList.add('selected');
-                }
-
-                dayEl.onclick = () => selectDate(dateValue);
-                daysContainer.appendChild(dayEl);
-            }
-
-            // 次月の日を埋める（6行×7列=42マスに調整）
-            const totalCells = daysContainer.children.length;
-            const remainingCells = 42 - totalCells;
-            for (let day = 1; day <= remainingCells; day++) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'calendar-day other-month';
-                dayEl.textContent = day;
-                const dateValue = new Date(year, month + 1, day);
-                dayEl.onclick = () => selectDate(dateValue);
+                dayEl.textContent = d;
+                dayEl.onclick = () => {
+                    selectedDate = new Date(year, month, d);
+                    updateDateDisplay();
+                    document.getElementById('calendar-dropdown').classList.remove('show');
+                };
                 daysContainer.appendChild(dayEl);
             }
         }
 
-        function changeMonth(delta) {
-            calendarDate.setMonth(calendarDate.getMonth() + delta);
-            renderCalendar();
+        function changeMonth(delta) { calendarDate.setMonth(calendarDate.getMonth() + delta); renderCalendar(); }
+
+        function updateDateDisplay() {
+            const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth()+1).padStart(2,'0')}-${String(selectedDate.getDate()).padStart(2,'0')}`;
+            document.getElementById('today-date').value = dateStr;
+            document.getElementById('review-date').innerText = dateStr.replace(/-/g, '/');
         }
 
-        function selectDate(date) {
-            selectedDate = date;
-            calendarDate = new Date(date.getFullYear(), date.getMonth(), 1);
-            updateDateDisplay();
-            renderCalendar();
-            document.getElementById('calendar-dropdown').classList.remove('show');
-        }
-
-        // =======================================================
-        // ユーティリティ
-        // =======================================================
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        function validatePeriod(input) { if (input.value < 1) input.value = 1; if (input.value > 12) input.value = 12; }
     </script>
 </body>
 
