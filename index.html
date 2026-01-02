@@ -882,6 +882,10 @@
     currentUser = { name: "Test User" }; // ダミーのユーザー情報を入れる（エラー回避のため）
     showApp(); // メイン画面を表示
 }
+        function showLogin() {
+    // ログイン画面を出さずに、強制的にメイン画面(showApp)を呼ぶように変更
+    showApp(); 
+}
 
             // ユーザー情報表示
             document.getElementById('display-user-name').textContent = currentUser.display_name;
