@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIチューター</title>
+
+    <!-- PWA設定 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="授業AI">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3426/3426653.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --border-radius: 8px;
+            --chat-student-bg: #4A90E2;
+            --chat-ai-bg: #e0e0e0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 80px;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior-y: none;
+        }
+
+        /* --- ナビゲーションタブ --- */
+        .tab-bar {
+            display: flex;
+            background: #fff;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding-top: env(safe-area-inset-top, 10px);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 5px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .tab-btn:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        /* --- メインコンテンツ --- */
+        .container {
+            max-width: 600px;
+            margin: 0 auto 20px;
+            padding: 0 15px;
+            padding-top: 80px;
+        }
+
+        .section {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        h2,
+        h3 {
+            margin-top: 0;
+            font-size: 1.1em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        /* フォーム要素 */
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            appearance: none;
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        /* --- 教科選択タブ --- */
+        .subject-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            padding: 5px 0 10px 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .subject-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .subject-tab-btn {
+            flex: 0 0 auto;
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            background: #f9f9f9;
+            color: #555;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .subject-tab-btn:hover {
+            background: #eee;
+        }
+
+        .subject-tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+        }
+
+        /* --- ホーム画面 --- */
+        .current-class-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .big-btn {
+            flex: 1;
+            padding: 20px 10px;
+            background: #fff;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+            line-height: 1.4;
+        }
+
+        .big-btn:hover {
+            background: #eaf4ff;
+        }
+
+        .big-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 過去の授業リスト */
+        .history-list-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            background: #f9f9f9;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-subject {
+            width: 60px;
+            font-weight: bold;
+            background: #eee;
+            text-align: center;
+            padding: 4px;
+            border-radius: 4px;
+            margin-right: 15px;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .history-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-date {
+            font-size: 0.75em;
+            color: #888;
+            margin-bottom: 2px;
+        }
+
+        /* --- チャット画面 --- */
+        .chat-container {
+            height: calc(100vh - 280px);
+            min-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .message.student {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 75%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 0.95em;
+            line-height: 1.4;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap;
+        }
+
+        .ai .bubble {
+            background: var(--chat-ai-bg);
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .student .bubble {
+            background: var(--chat-student-bg);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* ローディングアニメーション */
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #888;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+            margin: 0 2px;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* --- 振り返り画面 --- */
+        .class-meta-box {
+            background: #eee;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-item:hover {
+            background: #f0f0f0;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .status-unsolved {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .status-solved {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: transform 0.1s;
+        }
+
+        .submit-btn:active {
+            transform: translateY(2px);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* --- 共有疑問リスト --- */
+        .shared-question-list {
+            padding-left: 0;
+            color: #555;
+            line-height: 1.6;
+            list-style-type: none;
+        }
+
+        .shared-question-list li {
+            margin-bottom: 8px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .empty-message {
+            color: #999;
+            font-style: italic;
+            font-size: 0.9em;
+            text-align: center;
+            background: none !important;
+            border: none !important;
+        }
+
+        /* 画面表示制御 */
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- ログイン画面 --- */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .login-btn:hover {
+            background: #3a7bc8;
+        }
+
+        .login-btn.secondary {
+            background: #fff;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .login-btn.secondary:hover {
+            background: #eaf4ff;
+        }
+
+        .login-error {
+            color: #c62828;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .login-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid #eee;
+            color: #888;
+        }
+
+        .login-tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* カスタムカレンダー */
+        .calendar-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .calendar-input {
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .calendar-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            padding: 10px;
+            min-width: 280px;
+        }
+
+        .calendar-dropdown.show {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .calendar-header button {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 5px 10px;
+            color: var(--primary-color);
+        }
+
+        .calendar-header button:hover {
+            background: #eaf4ff;
+            border-radius: 4px;
+        }
+
+        .calendar-header span {
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .calendar-weekdays span:first-child {
+            color: var(--primary-color);
+        }
+
+        .calendar-weekdays span:last-child {
+            color: #c62828;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .calendar-day {
+            text-align: center;
+            padding: 8px 4px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .calendar-day:hover {
+            background: #eaf4ff;
+        }
+
+        .calendar-day.other-month {
+            color: #ccc;
+        }
+
+        .calendar-day.today {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+
+        .calendar-day.selected {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        /* ユーザー情報表示 */
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #1565c0;
+        }
+
+        .streak-badge {
+            background: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.85em;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ログイン画面 -->
+    <div id="login-view" class="login-container">
+        <h1 class="login-title">AIチューター</h1>
+
+        <div class="login-tabs">
+            <div class="login-tab active" onclick="switchLoginTab('login')">ログイン</div>
+            <div class="login-tab" onclick="switchLoginTab('register')">新規登録</div>
+        </div>
+
+        <!-- ログインフォーム -->
+        <div id="login-form">
+            <label>学籍番号</label>
+            <input type="text" id="login-student-code" placeholder="例: ST001">
+
+            <label>パスワード</label>
+            <input type="password" id="login-password" placeholder="パスワード">
+
+            <div id="login-error" class="login-error" style="display:none;"></div>
+
+            <button class="login-btn" onclick="handleLogin()">ログイン</button>
+        </div>
+
+        <!-- 登録フォーム -->
+        <div id="register-form" style="display:none;">
+            <label>学籍番号</label>
+            <input type="text" id="register-student-code" placeholder="例: ST001">
+
+            <label>ニックネーム</label>
+            <input type="text" id="register-display-name" placeholder="表示名">
+
+            <label>パスワード</label>
+            <input type="password" id="register-password" placeholder="4文字以上">
+
+            <div id="register-error" class="login-error" style="display:none;"></div>
+
+            <button class="login-btn" onclick="handleRegister()">登録してはじめる</button>
+        </div>
+    </div>
+
+    <!-- メインアプリ（ログイン後表示） -->
+    <div id="app-container" style="display:none;">
+        <!-- ナビゲーション -->
+        <nav class="tab-bar">
+            <div class="tab-btn active" onclick="switchTab('home')">ホーム</div>
+            <div class="tab-btn" onclick="switchTab('chat')">質問チャット</div>
+            <div class="tab-btn" onclick="switchTab('review')">授業の振り返り</div>
+        </nav>
+
+        <main class="container">
+            <!-- === ホーム画面 === -->
+            <section id="home-view" class="view active">
+                <div class="user-info">
+                    <div>
+                        <span class="user-name" id="display-user-name">ゲスト</span>
+                        <span class="streak-badge" id="streak-display">0日連続</span>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">ログアウト</button>
+                </div>
+
+                <div class="section">
+                    <h3>現在の授業</h3>
+                    <div class="current-class-info">
+                        <div class="calendar-wrapper">
+                            <input type="text" id="today-date" class="calendar-input" readonly style="width: 140px;">
+                            <div class="calendar-dropdown" id="calendar-dropdown">
+                                <div class="calendar-header">
+                                    <button type="button" onclick="changeMonth(-1)">◀</button>
+                                    <span id="calendar-month-year"></span>
+                                    <button type="button" onclick="changeMonth(1)">▶</button>
+                                </div>
+                                <div class="calendar-weekdays">
+                                    <span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span>
+                                </div>
+                                <div class="calendar-days" id="calendar-days"></div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center;">
+                            <input type="number" id="class-period" value="1" min="1" max="12"
+                                style="width:60px; margin-left: 10px;" onchange="validatePeriod(this)">
+                            <span style="margin-left: 5px; font-weight:bold;">時間目</span>
+                        </div>
+                    </div>
+
+                    <label>教科を選択</label>
+                    <div class="subject-tabs" id="subject-tabs-container">
+                        <!-- 教科は動的に読み込み -->
+                    </div>
+                    <input type="hidden" id="home-subject" value="">
+                    <input type="hidden" id="home-subject-id" value="">
+
+                    <label>単元</label>
+                    <input type="text" placeholder="例: 過去形" id="home-unit">
+
+                    <div class="action-buttons">
+                        <div class="big-btn" onclick="startSession('chat')">
+                            質問チャット<br>を開く
+                        </div>
+                        <div class="big-btn" onclick="startSession('review')">
+                            授業の振り返り<br>を書く
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>皆の疑問 (リアルタイム共有)</h3>
+                    <p style="font-size:0.8em; color:#666; margin-bottom: 10px;">
+                        ※チャットでの質問から、重要な疑問が自動的にここに共有されます。
+                    </p>
+                    <ul id="shared-questions-list" class="shared-question-list">
+                        <li class="empty-message">読み込み中...</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>過去の授業</h3>
+                    <div id="history-list-container" class="history-list-container">
+                        <div style="text-align:center; padding:20px; color:#999; font-size:0.9em;">
+                            読み込み中...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === 質問チャット画面 === -->
+            <section id="chat-view" class="view">
+                <div class="section">
+                    <h3>質問チャット <span id="chat-header-info"
+                            style="font-size:0.8em; font-weight:normal; margin-left:10px;">(未選択)</span></h3>
+
+                    <div class="chat-container" id="chat-container">
+                        <div class="message ai">
+                            <div class="bubble">こんにちは！今日の授業でわからないことはありますか？</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <input type="text" id="chat-input" placeholder="質問を入力..." onkeypress="handleKeyPress(event)">
+                        <button id="send-btn" onclick="sendMessage()"
+                            style="padding:0 20px; border-radius:4px; border:none; background:var(--primary-color); color:#fff; font-weight:bold; cursor:pointer;">送信</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === 振り返り画面 === -->
+            <section id="review-view" class="view">
+                <div class="section">
+                    <h3>授業の振り返り</h3>
+                    <div class="class-meta-box">
+                        <strong>日程:</strong> <span id="review-date"></span><br>
+                        <strong>教科:</strong> <span id="review-subject">未選択</span><br>
+                        <strong>テーマ:</strong> <span id="review-unit">未入力</span>
+                    </div>
+
+                    <label>今日の授業のめあて</label>
+                    <textarea id="review-goal" placeholder="例: 過去形の文の作り方を覚える"></textarea>
+
+                    <label>授業でわかったこと・できるようになったこと</label>
+                    <textarea id="review-learned" placeholder="例: playにedをつけると過去を表せること"></textarea>
+
+                    <label>授業でわからなかったこと・疑問</label>
+                    <textarea id="review-question" placeholder="例: 不規則動詞はどうやって覚える？"></textarea>
+                </div>
+
+                <div class="section">
+                    <h3>授業中にメモした疑問</h3>
+                    <p style="font-size:0.8em; color:#666; margin-bottom: 10px;">
+                        ※チャットでの質問が自動でここに追加されます。<br>
+                        ※タップで「解決済み」に変更できます
+                    </p>
+
+                    <div id="personal-questions-list">
+                        <div class="empty-message"
+                            style="text-align:left; background:transparent!important; border:none!important; padding:0;">
+                            まだメモはありません。チャットで質問すると自動で追加されます。
+                        </div>
+                    </div>
+                </div>
+
+                <button class="submit-btn" onclick="submitReview()">振り返りを提出する</button>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // =======================================================
+        // グローバル状態
+        // =======================================================
+        const API_BASE = './api';
+        let currentUser = null;
+        let currentSession = null;
+        let subjects = [];
+        let pollInterval = null;
+
+        // カレンダー用
+        let calendarDate = new Date();
+        let selectedDate = new Date();
+
+        // =======================================================
+        // 初期化
+        // =======================================================
+        document.addEventListener('DOMContentLoaded', async function () {
+            // カレンダー初期化
+            initCalendar();
+
+            // セッション確認
+            await checkAuth();
+        });
+
+        // =======================================================
+        // 認証関連
+        // =======================================================
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_BASE}/auth.php?action=check`, {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (data.authenticated) {
+                    currentUser = data.user;
+                    showApp();
+                } else {
+                    showLogin();
+                }
+            } catch (e) {
+                console.error('Auth check failed:', e);
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('login-view').style.display = 'block';
+            document.getElementById('app-container').style.display = 'none';
+        }
+
+        function showApp() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+
+            // ユーザー情報表示
+            document.getElementById('display-user-name').textContent = currentUser.display_name;
+            document.getElementById('streak-display').textContent = `${currentUser.current_streak}日連続`;
+
+            // データ読み込み
+            loadSubjects();
+            loadSharedQuestions();
+            loadHistory();
+
+            // 定期更新開始
+            startPolling();
+        }
+
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.login-tab:${tab === 'login' ? 'first' : 'last'}-child`).classList.add('active');
+
+            document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+
+            // エラー非表示
+            document.getElementById('login-error').style.display = 'none';
+            document.getElementById('register-error').style.display = 'none';
+        }
+
+        async function handleLogin() {
+            const studentCode = document.getElementById('login-student-code').value.trim();
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+
+            if (!studentCode || !password) {
+                errorEl.textContent = '学籍番号とパスワードを入力してください';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/auth.php?action=login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ student_code: studentCode, password })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    currentUser = data.user;
+                    showApp();
+                } else {
+                    errorEl.textContent = data.error || 'ログインに失敗しました';
+                    errorEl.style.display = 'block';
+                }
+            } catch (e) {
+                errorEl.textContent = '通信エラーが発生しました';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        async function handleRegister() {
+            const studentCode = document.getElementById('register-student-code').value.trim();
+            const displayName = document.getElementById('register-display-name').value.trim();
+            const password = document.getElementById('register-password').value;
+            const errorEl = document.getElementById('register-error');
+
+            if (!studentCode || !displayName || !password) {
+                errorEl.textContent = 'すべての項目を入力してください';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/auth.php?action=register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ student_code: studentCode, display_name: displayName, password })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    currentUser = data.user;
+                    showApp();
+                } else {
+                    errorEl.textContent = data.error || '登録に失敗しました';
+                    errorEl.style.display = 'block';
+                }
+            } catch (e) {
+                errorEl.textContent = '通信エラーが発生しました';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await fetch(`${API_BASE}/auth.php?action=logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+            } catch (e) { }
+
+            currentUser = null;
+            currentSession = null;
+            stopPolling();
+            showLogin();
+        }
+
+        // =======================================================
+        // データ読み込み
+        // =======================================================
+        async function loadSubjects() {
+            try {
+                const res = await fetch(`${API_BASE}/auth.php?action=subjects`);
+                const data = await res.json();
+
+                if (data.success) {
+                    subjects = data.subjects;
+                    renderSubjectTabs();
+                }
+            } catch (e) {
+                console.error('Failed to load subjects:', e);
+            }
+        }
+
+        function renderSubjectTabs() {
+            const container = document.getElementById('subject-tabs-container');
+            container.innerHTML = subjects.map(s =>
+                `<div class="subject-tab-btn" onclick="selectSubject(this, '${s.subject_name}', ${s.subject_id})">${s.subject_name}</div>`
+            ).join('');
+        }
+
+        async function loadSharedQuestions() {
+            try {
+                const today = document.getElementById('today-date').value;
+                const res = await fetch(`${API_BASE}/questions.php?date=${today}&limit=20`);
+                const data = await res.json();
+
+                const listEl = document.getElementById('shared-questions-list');
+
+                if (data.success && data.questions.length > 0) {
+                    listEl.innerHTML = data.questions.map(q =>
+                        `<li>${escapeHtml(q.content)} <small style="color:#888;">(${q.subject_name})</small></li>`
+                    ).join('');
+                } else {
+                    listEl.innerHTML = '<li class="empty-message">まだ疑問はありません。チャットで質問すると自動で追加されます。</li>';
+                }
+            } catch (e) {
+                console.error('Failed to load questions:', e);
+            }
+        }
+
+        async function loadHistory() {
+            try {
+                const res = await fetch(`${API_BASE}/sessions.php?limit=10`, {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                const container = document.getElementById('history-list-container');
+
+                if (data.success && data.sessions.length > 0) {
+                    container.innerHTML = data.sessions.map(s => `
+                <div class="history-item" onclick="loadSession(${s.session_id})">
+                    <span class="history-subject">${s.subject_name}</span>
+                    <div class="history-content">
+                        <span class="history-date">${s.study_date}</span>
+                        <span>${s.unit_name || '単元なし'}</span>
+                    </div>
+                </div>
+            `).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center; padding:20px; color:#999; font-size:0.9em;">まだ履歴はありません。</div>';
+                }
+            } catch (e) {
+                console.error('Failed to load history:', e);
+            }
+        }
+
+        async function loadNotes() {
+            if (!currentSession) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/notes.php?session_id=${currentSession.session_id}`, {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                const container = document.getElementById('personal-questions-list');
+
+                if (data.success && data.notes.length > 0) {
+                    container.innerHTML = data.notes.map(n => `
+                <div class="toggle-item" onclick="toggleNoteStatus(${n.note_id}, '${n.status}')">
+                    <span>${escapeHtml(n.content)}</span>
+                    <span class="status-badge ${n.status === 'solved' ? 'status-solved' : 'status-unsolved'}">
+                        ${n.status === 'solved' ? '解決' : 'まだ'}
+                    </span>
+                </div>
+            `).join('');
+                } else {
+                    container.innerHTML = '<div class="empty-message" style="text-align:left; background:transparent!important; border:none!important; padding:0;">まだメモはありません。チャットで質問すると自動で追加されます。</div>';
+                }
+            } catch (e) {
+                console.error('Failed to load notes:', e);
+            }
+        }
+
+        // =======================================================
+        // セッション管理
+        // =======================================================
+        async function startSession(targetTab) {
+            const subjectId = document.getElementById('home-subject-id').value;
+            const subjectName = document.getElementById('home-subject').value;
+            const studyDate = document.getElementById('today-date').value;
+            const period = document.getElementById('class-period').value;
+            const unitName = document.getElementById('home-unit').value;
+
+            if (!subjectId) {
+                alert('教科を選択してください');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/sessions.php?action=current&subject_id=${subjectId}&study_date=${studyDate}&period=${period}&unit_name=${encodeURIComponent(unitName)}`, {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    currentSession = data.session;
+                    updateSessionDisplay();
+
+                    if (data.created) {
+                        // 新規セッション：チャット履歴クリア
+                        resetChat();
+                    } else {
+                        // 既存セッション：チャット履歴読み込み
+                        await loadChatHistory();
+                    }
+
+                    await loadNotes();
+                    switchTab(targetTab);
+                } else {
+                    alert(data.error || 'セッションの作成に失敗しました');
+                }
+            } catch (e) {
+                console.error('Failed to start session:', e);
+                alert('通信エラーが発生しました');
+            }
+        }
+
+        async function loadSession(sessionId) {
+            try {
+                const res = await fetch(`${API_BASE}/sessions.php?id=${sessionId}`, {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    currentSession = data.session;
+
+                    // フォームに反映
+                    document.getElementById('today-date').value = currentSession.study_date;
+                    document.getElementById('class-period').value = currentSession.period;
+                    document.getElementById('home-unit').value = currentSession.unit_name || '';
+
+                    // 教科タブを選択
+                    const subjectBtn = Array.from(document.querySelectorAll('.subject-tab-btn'))
+                        .find(btn => btn.textContent === currentSession.subject_name);
+                    if (subjectBtn) {
+                        selectSubject(subjectBtn, currentSession.subject_name, currentSession.subject_id);
+                    }
+
+                    updateSessionDisplay();
+                    await loadChatHistory();
+                    await loadNotes();
+                    switchTab('chat');
+                }
+            } catch (e) {
+                console.error('Failed to load session:', e);
+            }
+        }
+
+        function updateSessionDisplay() {
+            if (!currentSession) return;
+
+            const displayUnit = currentSession.unit_name ? ` / ${currentSession.unit_name}` : '';
+            document.getElementById('chat-header-info').textContent = `(${currentSession.subject_name}${displayUnit})`;
+            document.getElementById('review-date').textContent = currentSession.study_date.replace(/-/g, '/');
+            document.getElementById('review-subject').textContent = currentSession.subject_name;
+            document.getElementById('review-unit').textContent = currentSession.unit_name || '未入力';
+        }
+
+        // =======================================================
+        // チャット機能
+        // =======================================================
+        function resetChat() {
+            const container = document.getElementById('chat-container');
+            container.innerHTML = `
+        <div class="message ai">
+            <div class="bubble">こんにちは！今日の授業でわからないことはありますか？</div>
+        </div>
+    `;
+        }
+
+        async function loadChatHistory() {
+            if (!currentSession) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/chat.php?session_id=${currentSession.session_id}`, {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (data.success && data.messages.length > 0) {
+                    const container = document.getElementById('chat-container');
+                    container.innerHTML = `
+                <div class="message ai">
+                    <div class="bubble">こんにちは！今日の授業でわからないことはありますか？</div>
+                </div>
+            `;
+
+                    data.messages.forEach(msg => {
+                        addMessage(msg.sender === 'user' ? 'student' : 'ai', msg.content);
+                    });
+                } else {
+                    resetChat();
+                }
+            } catch (e) {
+                console.error('Failed to load chat history:', e);
+                resetChat();
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+
+        async function sendMessage() {
+            if (!currentSession) {
+                alert('先に教科を選択してセッションを開始してください');
+                return;
+            }
+
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const container = document.getElementById('chat-container');
+            const sendBtn = document.getElementById('send-btn');
+
+            addMessage('student', text);
+            input.value = '';
+
+            // Loading表示
+            const loadingId = 'loading-' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message ai';
+            loadingDiv.id = loadingId;
+            loadingDiv.innerHTML = `<div class="bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+            container.appendChild(loadingDiv);
+            container.scrollTop = container.scrollHeight;
+
+            input.disabled = true;
+            sendBtn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/chat.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        session_id: currentSession.session_id,
+                        message: text
+                    })
+                });
+
+                const data = await res.json();
+
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                if (data.success) {
+                    addMessage('ai', data.answer);
+
+                    // 疑問が共有された場合
+                    if (data.summary) {
+                        loadSharedQuestions();
+                        loadNotes();
+                    }
+                } else {
+                    addMessage('ai', `エラー: ${data.error || '応答を取得できませんでした'}`);
+                }
+            } catch (e) {
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+                addMessage('ai', '通信エラーが発生しました。しばらく待ってから再度お試しください。');
+            } finally {
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        function addMessage(type, text) {
+            const container = document.getElementById('chat-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${type}`;
+            msgDiv.innerHTML = `<div class="bubble">${escapeHtml(text)}</div>`;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // =======================================================
+        // メモ機能
+        // =======================================================
+        async function toggleNoteStatus(noteId, currentStatus) {
+            const newStatus = currentStatus === 'unsolved' ? 'solved' : 'unsolved';
+
+            try {
+                await fetch(`${API_BASE}/notes.php?id=${noteId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                loadNotes();
+            } catch (e) {
+                console.error('Failed to toggle note:', e);
+            }
+        }
+
+        // =======================================================
+        // 振り返り機能
+        // =======================================================
+        async function submitReview() {
+            if (!currentSession) {
+                alert('先に教科を選択してセッションを開始してください');
+                return;
+            }
+
+            const goalText = document.getElementById('review-goal').value.trim();
+            const understoodText = document.getElementById('review-learned').value.trim();
+            const questionText = document.getElementById('review-question').value.trim();
+
+            // バリデーション：すべてのフィールドに入力が必要
+            if (!goalText || !understoodText || !questionText) {
+                alert('すべての項目を入力してください');
+                return;
+            }
+
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '送信中...';
+
+            try {
+                const res = await fetch(`${API_BASE}/reflections.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        session_id: currentSession.session_id,
+                        goal_text: goalText,
+                        understood_text: understoodText,
+                        question_text: questionText
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('振り返りを提出しました！');
+                    document.getElementById('review-goal').value = '';
+                    document.getElementById('review-learned').value = '';
+                    document.getElementById('review-question').value = '';
+                    loadHistory();
+                    switchTab('home');
+                } else {
+                    alert(data.error || '提出に失敗しました');
+                }
+            } catch (e) {
+                alert('通信エラーが発生しました');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '振り返りを提出する';
+            }
+        }
+
+        // =======================================================
+        // UI操作
+        // =======================================================
+        function selectSubject(element, subjectName, subjectId) {
+            document.querySelectorAll('.subject-tab-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('home-subject').value = subjectName;
+            document.getElementById('home-subject-id').value = subjectId;
+
+            const unit = document.getElementById('home-unit').value || '';
+            const displayUnit = unit ? ` / ${unit}` : '';
+            document.getElementById('chat-header-info').textContent = `(${subjectName}${displayUnit})`;
+            document.getElementById('review-subject').textContent = subjectName;
+        }
+
+        function validatePeriod(input) {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 1) input.value = 1;
+            else if (value > 12) input.value = 12;
+        }
+
+        function switchTab(tabName) {
+            // チャットや振り返りタブに移動しようとした場合、セッションがなければ作成を試みる
+            if ((tabName === 'chat' || tabName === 'review') && !currentSession) {
+                const subjectId = document.getElementById('home-subject-id').value;
+                if (!subjectId) {
+                    alert('先に教科を選択してください');
+                    return;
+                }
+                // セッションを作成してから移動
+                startSession(tabName);
+                return;
+            }
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+
+            if (tabName === 'home') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('home-view').classList.add('active');
+            } else if (tabName === 'chat') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('chat-view').classList.add('active');
+                const container = document.getElementById('chat-container');
+                container.scrollTop = container.scrollHeight;
+            } else if (tabName === 'review') {
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+                document.getElementById('review-view').classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // 単元入力時の表示更新
+        document.getElementById('home-unit').addEventListener('input', function (e) {
+            const subject = document.getElementById('home-subject').value || '未選択';
+            const unit = e.target.value;
+            const displayUnit = unit ? ` / ${unit}` : '';
+            document.getElementById('chat-header-info').textContent = `(${subject}${displayUnit})`;
+            document.getElementById('review-unit').textContent = unit || '未入力';
+        });
+
+        // =======================================================
+        // ポーリング（定期更新）
+        // =======================================================
+        function startPolling() {
+            pollInterval = setInterval(() => {
+                loadSharedQuestions();
+            }, 30000); // 30秒ごと
+        }
+
+        function stopPolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+        }
+
+        // =======================================================
+        // カレンダー機能
+        // =======================================================
+        function initCalendar() {
+            const today = new Date();
+            selectedDate = today;
+            calendarDate = new Date(today.getFullYear(), today.getMonth(), 1);
+
+            updateDateDisplay();
+            renderCalendar();
+
+            // カレンダー入力欄クリックでドロップダウン表示
+            const input = document.getElementById('today-date');
+            const dropdown = document.getElementById('calendar-dropdown');
+
+            input.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+                if (dropdown.classList.contains('show')) {
+                    renderCalendar();
+                }
+            });
+
+            // 外側クリックで閉じる
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target) && e.target !== input) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+
+        function formatDateValue(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDateDisplay(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${year}/${month}/${day}`;
+        }
+
+        function updateDateDisplay() {
+            const input = document.getElementById('today-date');
+            input.value = formatDateValue(selectedDate);
+            document.getElementById('review-date').innerText = formatDateDisplay(selectedDate);
+        }
+
+        function renderCalendar() {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+
+            // ヘッダー更新
+            document.getElementById('calendar-month-year').textContent = `${year}年${month + 1}月`;
+
+            // 月の最初の日と最後の日
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+
+            // 月曜始まりのため、曜日を調整 (0=月, 1=火, ..., 6=日)
+            let startDayOfWeek = firstDay.getDay() - 1;
+            if (startDayOfWeek < 0) startDayOfWeek = 6; // 日曜日は6
+
+            const daysContainer = document.getElementById('calendar-days');
+            daysContainer.innerHTML = '';
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // 前月の日を埋める
+            const prevMonth = new Date(year, month, 0);
+            for (let i = startDayOfWeek - 1; i >= 0; i--) {
+                const day = prevMonth.getDate() - i;
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day other-month';
+                dayEl.textContent = day;
+                const dateValue = new Date(year, month - 1, day);
+                dayEl.onclick = () => selectDate(dateValue);
+                daysContainer.appendChild(dayEl);
+            }
+
+            // 当月の日
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                dayEl.textContent = day;
+
+                const dateValue = new Date(year, month, day);
+                dateValue.setHours(0, 0, 0, 0);
+
+                if (dateValue.getTime() === today.getTime()) {
+                    dayEl.classList.add('today');
+                }
+                if (formatDateValue(dateValue) === formatDateValue(selectedDate)) {
+                    dayEl.classList.add('selected');
+                }
+
+                dayEl.onclick = () => selectDate(dateValue);
+                daysContainer.appendChild(dayEl);
+            }
+
+            // 次月の日を埋める（6行×7列=42マスに調整）
+            const totalCells = daysContainer.children.length;
+            const remainingCells = 42 - totalCells;
+            for (let day = 1; day <= remainingCells; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day other-month';
+                dayEl.textContent = day;
+                const dateValue = new Date(year, month + 1, day);
+                dayEl.onclick = () => selectDate(dateValue);
+                daysContainer.appendChild(dayEl);
+            }
+        }
+
+        function changeMonth(delta) {
+            calendarDate.setMonth(calendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function selectDate(date) {
+            selectedDate = date;
+            calendarDate = new Date(date.getFullYear(), date.getMonth(), 1);
+            updateDateDisplay();
+            renderCalendar();
+            document.getElementById('calendar-dropdown').classList.remove('show');
+        }
+
+        // =======================================================
+        // ユーティリティ
+        // =======================================================
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+
+</html>
