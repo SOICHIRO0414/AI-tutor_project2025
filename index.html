@@ -6,184 +6,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIチューター (デモ版)</title>
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="授業AI">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3426/3426653.png">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* 基本設定 */
         :root {
             --primary-color: #4A90E2;
             --bg-color: #f5f5f5;
-            --text-color: #333;
-            --border-radius: 8px;
-            --chat-student-bg: #4A90E2;
-            --chat-ai-bg: #e0e0e0;
         }
 
         body {
             font-family: "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: #333;
             padding-bottom: 80px;
-            -webkit-font-smoothing: antialiased;
-            overscroll-behavior-y: none;
+            margin: 0;
+        }
+
+        /* アプリコンテナ */
+        #app-container {
+            display: block !important; /* 強制的に表示 */
+            max-width: 600px;
+            margin: 0 auto;
+            padding-top: 60px; /* タブバーの分 */
         }
 
         /* --- ナビゲーションタブ --- */
         .tab-bar {
             display: flex;
             background: #fff;
-            padding: 10px;
             border-bottom: 1px solid #ddd;
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            z-index: 100;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            padding-top: env(safe-area-inset-top, 10px);
+            z-index: 999;
+            height: 50px;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 12px 5px;
-            border: 1px solid #ddd;
-            background: #fff;
-            cursor: pointer;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
             color: #666;
-            font-size: 14px;
-            transition: all 0.2s;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
         }
 
-        .tab-btn:first-child { border-radius: 8px 0 0 8px; }
-        .tab-btn:last-child { border-radius: 0 8px 8px 0; }
         .tab-btn.active {
-            background-color: var(--primary-color);
-            color: #fff;
-            border-color: var(--primary-color);
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            background: #f0f8ff;
         }
 
-        /* --- メインコンテンツ --- */
-        .container {
-            max-width: 600px;
-            margin: 0 auto 20px;
-            padding: 0 15px;
-            padding-top: 80px;
-        }
+        /* --- セクション --- */
+        .view { display: none; padding: 15px; }
+        .view.active { display: block; }
 
-        .section {
+        .card {
             background: #fff;
-            border: 1px solid #ccc;
-            border-radius: var(--border-radius);
+            border-radius: 8px;
             padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         h3 {
-            font-size: 1.1em;
             border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-weight: bold;
             color: #444;
-            font-weight: bold;
         }
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"], input[type="date"], input[type="number"], textarea {
+        /* 入力フォーム */
+        input, textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             border-radius: 4px;
+            margin-top: 5px;
+            margin-bottom: 15px;
             box-sizing: border-box;
-            font-size: 16px;
         }
 
-        /* --- 教科選択タブ --- */
-        .subject-tabs {
-            display: flex;
-            overflow-x: auto;
-            gap: 8px;
-            padding-bottom: 10px;
-        }
-
-        .subject-tab-btn {
-            flex: 0 0 auto;
-            padding: 8px 16px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            background: #f9f9f9;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .subject-tab-btn.active {
+        /* ボタン */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
             background: var(--primary-color);
             color: white;
-            border-color: var(--primary-color);
-        }
-
-        /* --- ホームのボタン --- */
-        .action-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        .big-btn {
-            flex: 1;
-            padding: 20px 10px;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            border-radius: var(--border-radius);
-            font-weight: bold;
             text-align: center;
+            border-radius: 6px;
+            font-weight: bold;
             cursor: pointer;
+            border: none;
         }
+        .btn:active { opacity: 0.8; }
 
-        /* --- チャット --- */
-        .chat-container {
-            height: 350px;
+        /* チャット */
+        .chat-box {
+            height: 300px;
             overflow-y: auto;
-            border: 1px solid #eee;
-            padding: 15px;
             background: #fafafa;
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 6px;
             margin-bottom: 10px;
         }
-        .message { margin-bottom: 15px; display: flex; }
-        .message.ai { justify-content: flex-start; }
-        .message.student { justify-content: flex-end; }
-        .bubble {
-            max-width: 80%;
-            padding: 10px 15px;
-            border-radius: 18px;
-            font-size: 0.95em;
-        }
-        .ai .bubble { background: var(--chat-ai-bg); }
-        .student .bubble { background: var(--chat-student-bg); color: #fff; }
+        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 15px; max-width: 80%; width: fit-content;}
+        .msg.ai { background: #e0e0e0; margin-right: auto; border-bottom-left-radius: 2px;}
+        .msg.me { background: var(--primary-color); color: white; margin-left: auto; border-bottom-right-radius: 2px;}
 
-        /* 表示・非表示 */
-        .view { display: none; }
-        .view.active { display: block; }
-        
-        /* ユーザー情報 */
-        .user-info {
-            display: flex;
-            justify-content: space-between;
-            background: #e3f2fd;
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-        .user-name { font-weight: bold; color: #1565c0; }
-        .streak-badge { background: #ff9800; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8em; }
     </style>
 </head>
 
@@ -191,106 +127,94 @@
 
     <div id="app-container">
         <nav class="tab-bar">
-            <div id="tab-home" class="tab-btn active" onclick="switchTab('home')">ホーム</div>
-            <div id="tab-chat" class="tab-btn" onclick="switchTab('chat')">質問</div>
-            <div id="tab-review" class="tab-btn" onclick="switchTab('review')">振り返り</div>
+            <div class="tab-btn active" onclick="showTab('home', this)">ホーム</div>
+            <div class="tab-btn" onclick="showTab('chat', this)">質問チャット</div>
+            <div class="tab-btn" onclick="showTab('review', this)">振り返り</div>
         </nav>
 
-        <main class="container">
-            <section id="home-view" class="view active">
-                <div class="user-info">
-                    <div>
-                        <span class="user-name">テストユーザー</span>
-                        <span class="streak-badge">5日連続学習中！</span>
-                    </div>
-                </div>
+        <div id="home" class="view active">
+            <div class="card" style="background: #e3f2fd; border: 1px solid #bbdefb;">
+                <h2 style="margin:0; font-size:1.2em; color:#1565c0;">ようこそ！</h2>
+                <p style="margin:5px 0 0 0; color:#555;">ログイン不要のデモモードです。</p>
+            </div>
 
-                <div class="section">
-                    <h3>今日の授業設定</h3>
-                    <label>教科</label>
-                    <div class="subject-tabs">
-                        <div class="subject-tab-btn active">英語</div>
-                        <div class="subject-tab-btn">数学</div>
-                        <div class="subject-tab-btn">国語</div>
-                        <div class="subject-tab-btn">理科</div>
-                        <div class="subject-tab-btn">社会</div>
-                    </div>
-                    <label>単元名</label>
-                    <input type="text" placeholder="例: 関係代名詞" id="home-unit">
-
-                    <div class="action-buttons">
-                        <div class="big-btn" onclick="switchTab('chat')">質問を始める</div>
-                        <div class="big-btn" onclick="switchTab('review')">振り返りを書く</div>
-                    </div>
+            <div class="card">
+                <h3>今日の授業</h3>
+                <label>教科を選択</label>
+                <div style="display:flex; gap:5px; overflow-x:auto; padding-bottom:5px;">
+                    <button class="btn" style="width:auto; padding:5px 15px; background:#4A90E2;">英語</button>
+                    <button class="btn" style="width:auto; padding:5px 15px; background:#ddd; color:#333;">数学</button>
+                    <button class="btn" style="width:auto; padding:5px 15px; background:#ddd; color:#333;">国語</button>
                 </div>
-            </section>
+                
+                <label style="margin-top:15px;">単元名</label>
+                <input type="text" placeholder="例: 現在完了形">
 
-            <section id="chat-view" class="view">
-                <div class="section">
-                    <h3>AI質問チャット</h3>
-                    <div class="chat-container" id="chat-container">
-                        <div class="message ai">
-                            <div class="bubble">こんにちは！今日の授業でわからなかったところを教えてね。</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="chat-input" placeholder="ここに入力...">
-                        <button onclick="sendMessage()" style="background:var(--primary-color); color:#fff; padding:10px 20px; border-radius:4px;">送信</button>
-                    </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <button class="btn" onclick="showTab('chat', document.querySelectorAll('.tab-btn')[1])">質問する</button>
+                    <button class="btn" onclick="showTab('review', document.querySelectorAll('.tab-btn')[2])">振り返る</button>
                 </div>
-            </section>
+            </div>
+        </div>
 
-            <section id="review-view" class="view">
-                <div class="section">
-                    <h3>授業の振り返り</h3>
-                    <label>今日のめあて</label>
-                    <textarea placeholder="何を目標にしましたか？"></textarea>
-                    <label>わかったこと</label>
-                    <textarea placeholder="新しく知ったことは？"></textarea>
-                    <button class="big-btn" style="width:100%; margin-top:20px;" onclick="alert('保存しました（デモ）')">保存する</button>
+        <div id="chat" class="view">
+            <div class="card">
+                <h3>AI先生への質問</h3>
+                <div class="chat-box" id="chat-box">
+                    <div class="msg ai">こんにちは！わからないことがあれば聞いてくださいね。</div>
                 </div>
-            </section>
-        </main>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" id="chat-in" placeholder="質問を入力" style="margin:0;">
+                    <button class="btn" style="width:60px; margin:0;" onclick="sendMsg()">送信</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="review" class="view">
+            <div class="card">
+                <h3>授業の振り返り</h3>
+                <label>今日のめあて</label>
+                <textarea rows="2"></textarea>
+                
+                <label>わかったこと</label>
+                <textarea rows="2"></textarea>
+                
+                <button class="btn" onclick="alert('送信しました（デモ）')">提出する</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // タブ切り替え
-        function switchTab(tabName) {
-            // 全ビューを非表示
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
-            // 選択したタブとビューを表示
-            document.getElementById(tabName + '-view').classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
+        // タブ切り替え機能
+        function showTab(id, btnElement) {
+            // 全ての画面を隠す
+            document.querySelectorAll('.view').forEach(div => div.classList.remove('active'));
+            // 全てのボタンの選択状態を解除
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // 選ばれた画面とボタンをアクティブにする
+            document.getElementById(id).classList.add('active');
+            btnElement.classList.add('active');
         }
 
-        // チャット送信
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if (!text) return;
+        // チャット送信機能（デモ）
+        function sendMsg() {
+            const input = document.getElementById('chat-in');
+            const text = input.value;
+            if(!text) return;
 
-            const container = document.getElementById('chat-container');
+            const box = document.getElementById('chat-box');
             
             // 自分のメッセージ
-            const myMsg = document.createElement('div');
-            myMsg.className = 'message student';
-            myMsg.innerHTML = `<div class="bubble">${text}</div>`;
-            container.appendChild(myMsg);
-
+            box.innerHTML += `<div class="msg me">${text}</div>`;
             input.value = '';
 
-            // AIの返信（デモ）
+            // AIの返信（1秒後）
             setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'message ai';
-                aiMsg.innerHTML = `<div class="bubble">「${text}」についてですね。デモ版ですが、本番ではAIが詳しく解説します！</div>`;
-                container.appendChild(aiMsg);
-                container.scrollTop = container.scrollHeight;
+                box.innerHTML += `<div class="msg ai">「${text}」についての質問ですね！デモ版なのでここまでですが、実際はここに回答が表示されます。</div>`;
+                box.scrollTop = box.scrollHeight;
             }, 800);
         }
     </script>
 </body>
-
 </html>
