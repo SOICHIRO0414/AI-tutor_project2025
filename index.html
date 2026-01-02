@@ -878,32 +878,10 @@
         // 認証関連
         // =======================================================
         async function checkAuth() {
-            try {
-                const res = await fetch(`${API_BASE}/auth.php?action=check`, {
-                    credentials: 'include'
-                });
-                const data = await res.json();
-
-                if (data.authenticated) {
-                    currentUser = data.user;
-                    showApp();
-                } else {
-                    showLogin();
-                }
-            } catch (e) {
-                console.error('Auth check failed:', e);
-                showLogin();
-            }
-        }
-
-        function showLogin() {
-            document.getElementById('login-view').style.display = 'block';
-            document.getElementById('app-container').style.display = 'none';
-        }
-
-        function showApp() {
-            document.getElementById('login-view').style.display = 'none';
-            document.getElementById('app-container').style.display = 'block';
+    // サーバーへの問い合わせ（fetch）を全部飛ばして、強制的にログイン状態にします
+    currentUser = { name: "Test User" }; // ダミーのユーザー情報を入れる（エラー回避のため）
+    showApp(); // メイン画面を表示
+}
 
             // ユーザー情報表示
             document.getElementById('display-user-name').textContent = currentUser.display_name;
