@@ -59,14 +59,8 @@
             transition: all 0.2s;
         }
 
-        .tab-btn:first-child {
-            border-radius: 8px 0 0 8px;
-        }
-
-        .tab-btn:last-child {
-            border-radius: 0 8px 8px 0;
-        }
-
+        .tab-btn:first-child { border-radius: 8px 0 0 8px; }
+        .tab-btn:last-child { border-radius: 0 8px 8px 0; }
         .tab-btn.active {
             background-color: var(--primary-color);
             color: #fff;
@@ -90,17 +84,15 @@
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        h2,
         h3 {
-            margin-top: 0;
             font-size: 1.1em;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
             margin-bottom: 15px;
             color: #444;
+            font-weight: bold;
         }
 
-        /* フォーム要素 */
         label {
             display: block;
             margin-top: 15px;
@@ -110,24 +102,13 @@
             margin-bottom: 5px;
         }
 
-        input[type="text"],
-        input[type="date"],
-        input[type="number"],
-        textarea,
-        input[type="password"] {
+        input[type="text"], input[type="date"], input[type="number"], textarea {
             width: 100%;
             padding: 10px;
-            margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
-            appearance: none;
-        }
-
-        textarea {
-            height: 80px;
-            resize: vertical;
         }
 
         /* --- 教科選択タブ --- */
@@ -135,13 +116,7 @@
             display: flex;
             overflow-x: auto;
             gap: 8px;
-            padding: 5px 0 10px 0;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .subject-tabs::-webkit-scrollbar {
-            display: none;
+            padding-bottom: 10px;
         }
 
         .subject-tab-btn {
@@ -150,304 +125,57 @@
             border: 1px solid #ccc;
             border-radius: 20px;
             background: #f9f9f9;
-            color: #555;
             font-size: 14px;
-            font-weight: bold;
             cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-
-        .subject-tab-btn:hover {
-            background: #eee;
         }
 
         .subject-tab-btn.active {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
         }
 
-        /* --- ホーム画面 --- */
-        .current-class-info {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
+        /* --- ホームのボタン --- */
+        .action-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .big-btn {
             flex: 1;
             padding: 20px 10px;
-            background: #fff;
             border: 2px solid var(--primary-color);
             color: var(--primary-color);
             border-radius: var(--border-radius);
             font-weight: bold;
-            cursor: pointer;
             text-align: center;
-            transition: background 0.2s;
-            line-height: 1.4;
-        }
-
-        .big-btn:hover {
-            background: #eaf4ff;
-        }
-
-        .big-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* 過去の授業リスト */
-        .history-list-container {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .history-item {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #eee;
-            padding: 12px 0;
             cursor: pointer;
         }
 
-        .history-item:hover {
-            background: #f9f9f9;
-        }
-
-        .history-item:last-child {
-            border-bottom: none;
-        }
-
-        .history-subject {
-            width: 60px;
-            font-weight: bold;
-            background: #eee;
-            text-align: center;
-            padding: 4px;
-            border-radius: 4px;
-            margin-right: 15px;
-            font-size: 0.9em;
-            flex-shrink: 0;
-        }
-
-        .history-content {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .history-date {
-            font-size: 0.75em;
-            color: #888;
-            margin-bottom: 2px;
-        }
-
-        /* --- チャット画面 --- */
+        /* --- チャット --- */
         .chat-container {
-            height: calc(100vh - 280px);
-            min-height: 300px;
+            height: 350px;
             overflow-y: auto;
             border: 1px solid #eee;
             padding: 15px;
             background: #fafafa;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
-
-        .message {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-end;
-        }
-
-        .message.ai {
-            justify-content: flex-start;
-        }
-
-        .message.student {
-            justify-content: flex-end;
-        }
-
+        .message { margin-bottom: 15px; display: flex; }
+        .message.ai { justify-content: flex-start; }
+        .message.student { justify-content: flex-end; }
         .bubble {
-            max-width: 75%;
+            max-width: 80%;
             padding: 10px 15px;
             border-radius: 18px;
             font-size: 0.95em;
-            line-height: 1.4;
-            position: relative;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            white-space: pre-wrap;
         }
+        .ai .bubble { background: var(--chat-ai-bg); }
+        .student .bubble { background: var(--chat-student-bg); color: #fff; }
 
-        .ai .bubble {
-            background: var(--chat-ai-bg);
-            color: #333;
-            border-bottom-left-radius: 4px;
-        }
-
-        .student .bubble {
-            background: var(--chat-student-bg);
-            color: #fff;
-            border-bottom-right-radius: 4px;
-        }
-
-        /* ローディングアニメーション */
-        .typing-indicator span {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background-color: #888;
-            border-radius: 50%;
-            animation: typing 1.4s infinite ease-in-out both;
-            margin: 0 2px;
-        }
-
-        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-
-        /* --- 振り返り画面 --- */
-        .class-meta-box {
-            background: #eee;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            line-height: 1.6;
-        }
-
-        .toggle-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 12px;
-            margin-top: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .toggle-item:hover { background: #f0f0f0; }
-
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
-            min-width: 50px;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .status-unsolved { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
-        .status-solved { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 25px;
-            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-            transition: transform 0.1s;
-        }
-
-        .submit-btn:active { transform: translateY(2px); }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
-
-        /* --- 共有疑問リスト --- */
-        .shared-question-list {
-            padding-left: 0;
-            color: #555;
-            line-height: 1.6;
-            list-style-type: none;
-        }
-
-        .shared-question-list li {
-            margin-bottom: 8px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 4px;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .empty-message {
-            color: #999;
-            font-style: italic;
-            font-size: 0.9em;
-            text-align: center;
-            background: none !important;
-            border: none !important;
-        }
-
-        /* 画面表示制御 */
-        .view { display: none; animation: fadeIn 0.3s ease; }
+        /* 表示・非表示 */
+        .view { display: none; }
         .view.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- ログイン画面 (デモでは非表示) --- */
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* カレンダー */
-        .calendar-wrapper { position: relative; display: inline-block; }
-        .calendar-input { cursor: pointer; background: #fff; }
-        .calendar-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            padding: 10px;
-            min-width: 280px;
-        }
-        .calendar-dropdown.show { display: block; }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .calendar-header button { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 5px 10px; color: var(--primary-color); }
-        .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8em; color: #666; }
-        .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-        .calendar-day { text-align: center; padding: 8px 4px; cursor: pointer; border-radius: 4px; font-size: 0.9em; }
-        .calendar-day.other-month { color: #ccc; }
-        .calendar-day.today { background: #e3f2fd; font-weight: bold; }
-        .calendar-day.selected { background: var(--primary-color); color: #fff; }
-
+        
         /* ユーザー情報 */
         .user-info {
             display: flex;
-            align-items: center;
             justify-content: space-between;
             background: #e3f2fd;
             padding: 10px 15px;
@@ -461,105 +189,53 @@
 
 <body>
 
-    <div id="login-view" class="login-container" style="display:none;">
-        <h1 class="text-2xl font-bold text-center mb-6 text-blue-600">AIチューター</h1>
-        <p class="text-center text-gray-600">デモ版のためログインは不要です</p>
-    </div>
-
     <div id="app-container">
         <nav class="tab-bar">
-            <div class="tab-btn active" onclick="switchTab('home')">ホーム</div>
-            <div class="tab-btn" onclick="switchTab('chat')">質問チャット</div>
-            <div class="tab-btn" onclick="switchTab('review')">授業の振り返り</div>
+            <div id="tab-home" class="tab-btn active" onclick="switchTab('home')">ホーム</div>
+            <div id="tab-chat" class="tab-btn" onclick="switchTab('chat')">質問</div>
+            <div id="tab-review" class="tab-btn" onclick="switchTab('review')">振り返り</div>
         </nav>
 
         <main class="container">
             <section id="home-view" class="view active">
                 <div class="user-info">
                     <div>
-                        <span class="user-name" id="display-user-name">テストユーザー</span>
-                        <span class="streak-badge" id="streak-display">5日連続</span>
+                        <span class="user-name">テストユーザー</span>
+                        <span class="streak-badge">5日連続学習中！</span>
                     </div>
-                    <span class="text-xs text-gray-500">Demo Mode</span>
                 </div>
 
                 <div class="section">
-                    <h3>現在の授業</h3>
-                    <div class="current-class-info">
-                        <div class="calendar-wrapper">
-                            <input type="text" id="today-date" class="calendar-input" readonly style="width: 140px;">
-                            <div class="calendar-dropdown" id="calendar-dropdown">
-                                <div class="calendar-header">
-                                    <button type="button" onclick="changeMonth(-1)">◀</button>
-                                    <span id="calendar-month-year"></span>
-                                    <button type="button" onclick="changeMonth(1)">▶</button>
-                                </div>
-                                <div class="calendar-weekdays">
-                                    <span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span>
-                                </div>
-                                <div class="calendar-days" id="calendar-days"></div>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center;">
-                            <input type="number" id="class-period" value="1" min="1" max="12"
-                                style="width:60px; margin-left: 10px;" onchange="validatePeriod(this)">
-                            <span style="margin-left: 5px; font-weight:bold;">時間目</span>
-                        </div>
+                    <h3>今日の授業設定</h3>
+                    <label>教科</label>
+                    <div class="subject-tabs">
+                        <div class="subject-tab-btn active">英語</div>
+                        <div class="subject-tab-btn">数学</div>
+                        <div class="subject-tab-btn">国語</div>
+                        <div class="subject-tab-btn">理科</div>
+                        <div class="subject-tab-btn">社会</div>
                     </div>
-
-                    <label>教科を選択</label>
-                    <div class="subject-tabs" id="subject-tabs-container">
-                        </div>
-                    <input type="hidden" id="home-subject" value="英語">
-                    <input type="hidden" id="home-subject-id" value="3">
-
-                    <label>単元</label>
-                    <input type="text" placeholder="例: 過去形" id="home-unit">
+                    <label>単元名</label>
+                    <input type="text" placeholder="例: 関係代名詞" id="home-unit">
 
                     <div class="action-buttons">
-                        <div class="big-btn" onclick="switchTab('chat')">
-                            質問チャット<br>を開く
-                        </div>
-                        <div class="big-btn" onclick="switchTab('review')">
-                            授業の振り返り<br>を書く
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>皆の疑問 (デモ)</h3>
-                    <ul id="shared-questions-list" class="shared-question-list">
-                        <li>過去形と現在完了形の見分け方は？ <small style="color:#888;">(英語)</small></li>
-                        <li>ルートの計算がわかりません <small style="color:#888;">(数学)</small></li>
-                    </ul>
-                </div>
-
-                <div class="section">
-                    <h3>過去の授業 (デモ履歴)</h3>
-                    <div id="history-list-container" class="history-list-container">
-                        <div class="history-item">
-                            <span class="history-subject">数学</span>
-                            <div class="history-content">
-                                <span class="history-date">2026/01/01</span>
-                                <span>方程式の応用</span>
-                            </div>
-                        </div>
+                        <div class="big-btn" onclick="switchTab('chat')">質問を始める</div>
+                        <div class="big-btn" onclick="switchTab('review')">振り返りを書く</div>
                     </div>
                 </div>
             </section>
 
             <section id="chat-view" class="view">
                 <div class="section">
-                    <h3>質問チャット <span id="chat-header-info" style="font-size:0.8em; font-weight:normal; margin-left:10px;">(英語)</span></h3>
+                    <h3>AI質問チャット</h3>
                     <div class="chat-container" id="chat-container">
                         <div class="message ai">
-                            <div class="bubble">こんにちは！今日の授業でわからないことはありますか？</div>
+                            <div class="bubble">こんにちは！今日の授業でわからなかったところを教えてね。</div>
                         </div>
                     </div>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <input type="text" id="chat-input" placeholder="質問を入力..." onkeypress="handleKeyPress(event)">
-                        <button id="send-btn" onclick="sendMessage()"
-                            style="padding:0 20px; border-radius:4px; border:none; background:var(--primary-color); color:#fff; font-weight:bold; cursor:pointer;">送信</button>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="chat-input" placeholder="ここに入力...">
+                        <button onclick="sendMessage()" style="background:var(--primary-color); color:#fff; padding:10px 20px; border-radius:4px;">送信</button>
                     </div>
                 </div>
             </section>
@@ -567,147 +243,53 @@
             <section id="review-view" class="view">
                 <div class="section">
                     <h3>授業の振り返り</h3>
-                    <div class="class-meta-box">
-                        <strong>日程:</strong> <span id="review-date"></span><br>
-                        <strong>教科:</strong> <span id="review-subject">英語</span><br>
-                        <strong>テーマ:</strong> <span id="review-unit">未入力</span>
-                    </div>
-
-                    <label>今日の授業のめあて</label>
-                    <textarea id="review-goal" placeholder="例: 過去形の文の作り方を覚える"></textarea>
-
-                    <label>授業でわかったこと・できるようになったこと</label>
-                    <textarea id="review-learned" placeholder="例: playにedをつけると過去を表せること"></textarea>
-
-                    <label>授業でわからなかったこと・疑問</label>
-                    <textarea id="review-question" placeholder="例: 不規則動詞はどうやって覚える？"></textarea>
+                    <label>今日のめあて</label>
+                    <textarea placeholder="何を目標にしましたか？"></textarea>
+                    <label>わかったこと</label>
+                    <textarea placeholder="新しく知ったことは？"></textarea>
+                    <button class="big-btn" style="width:100%; margin-top:20px;" onclick="alert('保存しました（デモ）')">保存する</button>
                 </div>
-                <button class="submit-btn" onclick="alert('デモ版のため提出はされません')">振り返りを提出する</button>
             </section>
         </main>
     </div>
 
     <script>
-        // --- デモ用グローバル状態 ---
-        let currentUser = { display_name: "テストユーザー", current_streak: 5 };
-        let subjects = [
-            {subject_id: 1, subject_name: "国語"},
-            {subject_id: 2, subject_name: "数学"},
-            {subject_id: 3, subject_name: "英語"},
-            {subject_id: 4, subject_name: "理科"},
-            {subject_id: 5, subject_name: "社会"}
-        ];
-        let calendarDate = new Date();
-        let selectedDate = new Date();
-
-        document.addEventListener('DOMContentLoaded', function () {
-            initCalendar();
-            renderSubjectTabs();
-            updateDateDisplay();
-            // 最初から英語を選択状態にする
-            const engBtn = document.querySelector('.subject-tab-btn:nth-child(3)');
-            if(engBtn) selectSubject(engBtn, '英語', 3);
-        });
-
-        function renderSubjectTabs() {
-            const container = document.getElementById('subject-tabs-container');
-            container.innerHTML = subjects.map(s =>
-                `<div class="subject-tab-btn ${s.subject_name === '英語' ? 'active' : ''}" onclick="selectSubject(this, '${s.subject_name}', ${s.subject_id})">${s.subject_name}</div>`
-            ).join('');
-        }
-
-        function selectSubject(element, subjectName, subjectId) {
-            document.querySelectorAll('.subject-tab-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('home-subject').value = subjectName;
-            document.getElementById('home-subject-id').value = subjectId;
-            document.getElementById('chat-header-info').textContent = `(${subjectName})`;
-            document.getElementById('review-subject').textContent = subjectName;
-        }
-
+        // タブ切り替え
         function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-
-            const tabs = document.querySelectorAll('.tab-btn');
-            if (tabName === 'home') {
-                tabs[0].classList.add('active');
-                document.getElementById('home-view').classList.add('active');
-            } else if (tabName === 'chat') {
-                tabs[1].classList.add('active');
-                document.getElementById('chat-view').classList.add('active');
-            } else if (tabName === 'review') {
-                tabs[2].classList.add('active');
-                document.getElementById('review-view').classList.add('active');
-            }
-            window.scrollTo(0, 0);
+            // 全ビューを非表示
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            // 選択したタブとビューを表示
+            document.getElementById(tabName + '-view').classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        async function sendMessage() {
+        // チャット送信
+        function sendMessage() {
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
             if (!text) return;
 
-            addMessage('student', text);
+            const container = document.getElementById('chat-container');
+            
+            // 自分のメッセージ
+            const myMsg = document.createElement('div');
+            myMsg.className = 'message student';
+            myMsg.innerHTML = `<div class="bubble">${text}</div>`;
+            container.appendChild(myMsg);
+
             input.value = '';
 
-            // AIのダミー回答
+            // AIの返信（デモ）
             setTimeout(() => {
-                addMessage('ai', "それは良い質問ですね！デモ版なので具体的な回答はできませんが、実際のアプリではAIがヒントを出してくれます。");
-            }, 1000);
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai';
+                aiMsg.innerHTML = `<div class="bubble">「${text}」についてですね。デモ版ですが、本番ではAIが詳しく解説します！</div>`;
+                container.appendChild(aiMsg);
+                container.scrollTop = container.scrollHeight;
+            }, 800);
         }
-
-        function addMessage(type, text) {
-            const container = document.getElementById('chat-container');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${type}`;
-            msgDiv.innerHTML = `<div class="bubble">${text}</div>`;
-            container.appendChild(msgDiv);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
-
-        // --- カレンダー・UI関連 ---
-        function initCalendar() {
-            const today = new Date();
-            selectedDate = today;
-            calendarDate = new Date(today.getFullYear(), today.getMonth(), 1);
-            const input = document.getElementById('today-date');
-            const dropdown = document.getElementById('calendar-dropdown');
-            input.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); renderCalendar(); });
-            document.addEventListener('click', (e) => { if (!dropdown.contains(e.target) && e.target !== input) dropdown.classList.remove('show'); });
-        }
-
-        function renderCalendar() {
-            const year = calendarDate.getFullYear();
-            const month = calendarDate.getMonth();
-            document.getElementById('calendar-month-year').textContent = `${year}年${month + 1}月`;
-            const lastDay = new Date(year, month + 1, 0).getDate();
-            const daysContainer = document.getElementById('calendar-days');
-            daysContainer.innerHTML = '';
-            for (let d = 1; d <= lastDay; d++) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'calendar-day';
-                dayEl.textContent = d;
-                dayEl.onclick = () => {
-                    selectedDate = new Date(year, month, d);
-                    updateDateDisplay();
-                    document.getElementById('calendar-dropdown').classList.remove('show');
-                };
-                daysContainer.appendChild(dayEl);
-            }
-        }
-
-        function changeMonth(delta) { calendarDate.setMonth(calendarDate.getMonth() + delta); renderCalendar(); }
-
-        function updateDateDisplay() {
-            const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth()+1).padStart(2,'0')}-${String(selectedDate.getDate()).padStart(2,'0')}`;
-            document.getElementById('today-date').value = dateStr;
-            document.getElementById('review-date').innerText = dateStr.replace(/-/g, '/');
-        }
-
-        function validatePeriod(input) { if (input.value < 1) input.value = 1; if (input.value > 12) input.value = 12; }
     </script>
 </body>
 
